@@ -20,7 +20,7 @@ db.connect((err) => {
     console.error('Erreur de connexion à la base de données: ' + err.message);
     return;
   }
-  console.log('Connecté à la base de données MySQL');
+  console.log('Connecté à la base de données MySQL ' + err.message);
 });
 
 // Route pour la page d'accueil
