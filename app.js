@@ -1,6 +1,8 @@
 const express = require('express');
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 const app = express();
 const port = 3000;
 
@@ -10,9 +12,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Connexion à la base de données MySQL
 const db = mysql.createConnection({
   host: 'localhost',
-  user: 'user',
-  password: 'Ludo.310',
-  database: 'Test1'
+  user: 'votre_utilisateur',
+  password: 'votre_mot_de_passe',
+  database: 'nom_de_votre_base_de_donnees'
 });
 
 db.connect((err) => {
@@ -20,7 +22,7 @@ db.connect((err) => {
     console.error('Erreur de connexion à la base de données: ' + err.message);
     return;
   }
-  console.log('Connecté à la base de données MySQL ' + err.message);
+  console.log('Connecté à la base de données MySQL');
 });
 
 // Route pour la page d'accueil
@@ -44,15 +46,22 @@ app.post('/inscription', (req, res) => {
   const email = req.body.email;
   const mdp = req.body.mdp;
 
-  const query = 'INSERT INTO utilisateurs (nom, email, mot_de_passe) VALUES (?, ?, ?)';
-  
-  db.query(query, [nom, email, mdp], (err, result) => {
+  // Hachage du mot de passe avec bcrypt
+  bcrypt.hash(mdp, saltRounds, function(err, hash) {
     if (err) {
-      console.error('Erreur lors de l\'insertion des données: ' + err.message);
+      console.error('Erreur lors du hachage du mot de passe: ' + err.message);
       res.send('Erreur lors de l\'inscription.');
     } else {
-      console.log('Inscription réussie avec l\'ID: ' + result.insertId);
-      res.send('Inscription réussie pour ' + nom + ' avec l\'email ' + email);
+      const query = 'INSERT INTO utilisateurs (nom, email, mot_de_passe) VALUES (?, ?, ?)';
+      db.query(query, [nom, email, hash], (err, result) => {
+        if (err) {
+          console.error('Erreur lors de l\'insertion des données: ' + err.message);
+          res.send('Erreur lors de l\'inscription.');
+        } else {
+          console.log('Inscription réussie avec l\'ID: ' + result.insertId);
+          res.send('Inscription réussie pour ' + nom + ' avec l\'email ' + email);
+        }
+      });
     }
   });
 });
