@@ -84,11 +84,15 @@ app.post('/login', (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
 
+
+console.log('result1', username, password);
+
+  
   db.query('SELECT * FROM utilisateurs WHERE nom = ?', [username], (err, results) => {
 
 
     
-console.log('result', username, password);
+console.log('result2', username, password);
 
 
     
