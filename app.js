@@ -85,6 +85,13 @@ app.post('/login', (req, res) => {
   const password = req.body.password;
 
   db.query('SELECT * FROM utilisateurs WHERE nom = ?', [username], (err, results) => {
+
+
+    
+console.log('result', username, password);
+
+
+    
     if (err) {
       // Gérer l'erreur
       console.error('Erreur lors de la récupération de l\'utilisateur: ' + err.message);
