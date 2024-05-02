@@ -12,8 +12,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Connexion à la base de données MySQL
 const db = mysql.createConnection({
   host: 'localhost',
-  user: 'user',
-  password: 'Ludo.310',
+  user: 'user', // Remplacez par votre nom d'utilisateur
+  password: 'Ludo.310', // Remplacez par votre mot de passe
   database: 'Test1'
 });
 
